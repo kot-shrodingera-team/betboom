@@ -1,0 +1,24 @@
+{
+  "name": "@kot-shrodingera-team/betboom",
+  "version": "1.0.0",
+  "dependencies": {
+    "@kot-shrodingera-team/germes-generators": "1.1.18",
+    "@kot-shrodingera-team/germes-utils": "1.0.67",
+    "@kot-shrodingera-team/worker-declaration": "1.0.13"
+  },
+  "devDependencies": {
+    "@rollup/plugin-json": "4.1.0",
+    "@rollup/plugin-typescript": "8.2.1",
+    "@typescript-eslint/eslint-plugin": "4.26.0",
+    "eslint": "7.28.0",
+    "eslint-config-airbnb-base": "14.2.1",
+    "eslint-config-airbnb-typescript": "12.3.1",
+    "eslint-config-prettier": "8.3.0",
+    "eslint-import-resolver-typescript": "2.4.0",
+    "eslint-plugin-import": "2.23.4",
+    "eslint-plugin-prettier": "3.4.0",
+    "prettier": "2.3.1",
+    "rollup": "2.51.0",
+    "typescript": "4.2.4"
+  }
+}
