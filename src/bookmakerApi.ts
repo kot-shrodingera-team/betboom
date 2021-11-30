@@ -31,7 +31,9 @@ export const clearGermesData = (): void => {
     manualParameter: undefined,
     manualStakeEnabled: undefined,
 
-    betFrame: document.querySelector<HTMLIFrameElement>('#sport_iframe_1'),
+    betFrame: document.querySelector<HTMLIFrameElement>(
+      '#sport_div_iframe > iframe'
+    ),
   };
 };
 
