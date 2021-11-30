@@ -34,8 +34,7 @@ const preOpenEvent = async (): Promise<void> => {
       window.location.pathname = '/live';
       throw new NewUrlError('Переходим в раздел Live');
     }
-  }
-  if (!/^\/sport\/live/.test(window.location.pathname)) {
+  } else if (!/^\/sport\/live/.test(window.location.pathname)) {
     window.location.pathname = '/sport/live';
     throw new NewUrlError('Переходим в раздел Live');
   }
