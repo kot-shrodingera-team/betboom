@@ -25,7 +25,7 @@ const setBetAcceptMode = async (): Promise<void> => {
     const acceptBetterOddsCheckboxIcon =
       acceptBetterOddsLabel.querySelector('.tg__checkbox_ico');
     if (
-      !acceptBetterOddsCheckboxIcon.classList.contains('checked') ||
+      !acceptBetterOddsCheckboxIcon.classList.contains('checked') &&
       !acceptBetterOddsCheckboxIcon.classList.contains('unchecked')
     ) {
       throw new JsFailError(
