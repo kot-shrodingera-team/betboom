@@ -12,7 +12,7 @@ import getCoefficient from '../stake_info/getCoefficient';
 const doStake = doStakeGenerator({
   // preCheck,
   doStakeButtonSelector:
-    '.favAmmButtons [value="ЗАКЛЮЧИТЬ ПАРИ"], .favAmmButtons [value="СДЕЛАТЬ СТАВКУ"]',
+    '.favAmmButtons [value="ЗАКЛЮЧИТЬ ПАРИ"], .favAmmButtons [value="СДЕЛАТЬ СТАВКУ"], .favAmmButtons [value="СДЕЛАТЬ СТАВКУ"]',
   // errorClasses: [
   //   {
   //     className: '',
