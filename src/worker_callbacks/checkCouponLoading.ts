@@ -1,67 +1,48 @@
 import checkCouponLoadingGenerator from '@kot-shrodingera-team/germes-generators/worker_callbacks/checkCouponLoading';
 import {
-  log,
+  getWorkerParameter,
   getElement,
-  awaiter,
   getRemainingTimeout,
-  checkCouponLoadingError,
-  checkCouponLoadingSuccess,
+  sleep,
+  log,
+  awaiter,
   text,
   sendTGBotMessage,
 } from '@kot-shrodingera-team/germes-utils';
+import {
+  sendErrorMessage,
+  betProcessingError,
+  betProcessingCompltete,
+} from '@kot-shrodingera-team/germes-utils/betProcessing';
 import { StateMachine } from '@kot-shrodingera-team/germes-utils/stateMachine';
-import getCoefficient from '../stake_info/getCoefficient';
-// import getParameter from '../stake_info/getParameter';
 
-const loaderSelector = '.tg__loader_cont_coupon.tg--hide';
-// const errorSelector = {
-//   stakeNoActive: '.stakes_panel .tg__stake_deleted',
-//   changeParameters: '.argumentChangeNotification',
-//   authError:
-//     '.err_panel_box:not([style="display: none;"]) > .tg_info_message::before',
-// };
+const loaderSelector = '.tg__loader_cont_coupon.tg--hide:not([style])';
 const errorSelector =
   '.err_panel_box:not([style="display: none;"]) > .tg_info_message';
 const betPlacedSelector = '.cp_success .congratText';
 
+const loaderNotAppearedTimeout = getWorkerParameter<number>(
+  'betProcessingStartDelay',
+  'number'
+);
+const noResultAfterLoaderDisappearedTimeout =
+  getWorkerParameter<number>(
+    'betProcessingLoaderDissapearMaxDelay',
+    'number'
+  ) || 3000;
+
 const asyncCheck = async () => {
   const machine = new StateMachine();
-  // const btnClickStake =
-  //   window.germesData.betFrame.contentDocument.querySelector<HTMLElement>(
-  //     '#favButtons .tg-grid-padding--4:nth-child(5) input'
-  //   );
+  const context = window.germesData.sportFrame.contentDocument;
 
   machine.promises = {
-    loader: () =>
-      getElement(
-        loaderSelector,
-        getRemainingTimeout(),
-        window.germesData.betFrame.contentDocument
-      ),
-    // errorParams: () =>
-    //   getElement(
-    //     errorSelector.changeParameters,
-    //     getRemainingTimeout(),
-    //     window.germesData.betFrame.contentDocument
-    //   ),
-    // errorNoActive: () =>
-    //   getElement(
-    //     errorSelector.stakeNoActive,
-    //     getRemainingTimeout(),
-    //     window.germesData.betFrame.contentDocument
-    //   ),
-    error: () =>
-      getElement(
-        errorSelector,
-        getRemainingTimeout(),
-        window.germesData.betFrame.contentDocument
-      ),
+    loader: () => getElement(loaderSelector, getRemainingTimeout(), context),
+    ...(loaderNotAppearedTimeout
+      ? { loaderNotAppeared: sleep(loaderNotAppearedTimeout) }
+      : {}),
+    error: () => getElement(errorSelector, getRemainingTimeout(), context),
     betPlaced: () =>
-      getElement(
-        betPlacedSelector,
-        getRemainingTimeout(),
-        window.germesData.betFrame.contentDocument
-      ),
+      getElement(betPlacedSelector, getRemainingTimeout(), context),
   };
 
   machine.setStates({
@@ -70,17 +51,23 @@ const asyncCheck = async () => {
         log('Начало обработки ставки', 'steelblue');
       },
     },
+    loaderNotAppeared: {
+      entry: async () => {
+        const message = `Индикатор или результат не появился в течении ${loaderNotAppearedTimeout} мс`;
+        log(message, 'crimson');
+        sendErrorMessage(message);
+        betProcessingError(machine);
+      },
+    },
     loader: {
       entry: async () => {
         log('Появился индикатор', 'steelblue');
         window.germesData.betProcessingAdditionalInfo = 'индикатор';
         delete machine.promises.loader;
+        delete machine.promises.loaderNotAppeared;
         machine.promises.loaderDissappeared = () =>
           awaiter(
-            () =>
-              !window.germesData.betFrame.contentDocument.querySelector<HTMLElement>(
-                loaderSelector
-              ).style.length,
+            () => context.querySelector(loaderSelector) === null,
             getRemainingTimeout()
           );
       },
@@ -90,110 +77,49 @@ const asyncCheck = async () => {
         log('Исчез индикатор', 'steelblue');
         window.germesData.betProcessingAdditionalInfo = null;
         delete machine.promises.loaderDissappeared;
-        const stakeCoef = getCoefficient();
-
-        if (stakeCoef !== worker.StakeInfo.Coef) {
-          checkCouponLoadingError({
-            botMessage: `Коэффициент изменился: ${worker.StakeInfo.Coef} => ${stakeCoef}`,
-            informMessage: `Коэффициент изменился: ${worker.StakeInfo.Coef} => ${stakeCoef}`,
-          });
-          machine.end = true;
-          return;
-        }
-        checkCouponLoadingError({
-          botMessage: '???',
-        });
-        machine.end = true;
+        machine.promises.noResultAfterLoaderDisappeared = () =>
+          sleep(noResultAfterLoaderDisappearedTimeout);
       },
     },
-    // errorParams: {
-    //   entry: async () => {
-    //     log('Изменения в параметрах', 'steelblue');
-    //     const stakeParameter = getParameter();
-
-    //     window.germesData.betProcessingAdditionalInfo = null;
-
-    //     const acceptButton =
-    //       window.germesData.betFrame.contentDocument.querySelector(
-    //         '[value="Принять"]'
-    //       );
-
-    //     const errorText = text(machine.data.result as Element);
-
-    //     if (stakeParameter !== worker.StakeInfo.Parametr) {
-    //       checkCouponLoadingError({
-    //         botMessage: `Изменился параметр ставки: ${worker.StakeInfo.Parametr} => ${stakeParameter}`,
-    //         informMessage: `Изменился параметр ставки: ${worker.StakeInfo.Parametr} => ${stakeParameter}`,
-    //       });
-    //       machine.end = true;
-    //       return;
-    //     }
-    //     checkCouponLoadingError({
-    //       botMessage: errorText,
-    //       informMessage: errorText,
-    //     });
-    //     machine.end = true;
-    //   },
-    // },
-    // errorNoActive: {
-    //   entry: async () => {
-    //     window.germesData.betProcessingAdditionalInfo = null;
-    //     const errorText = text(machine.data.result as Element);
-    //     const checkTextInStake = /не активна/.test(errorText);
-
-    //     if (checkTextInStake) {
-    //       checkCouponLoadingError({
-    //         botMessage: errorText,
-    //         informMessage: errorText,
-    //       });
-    //     }
-    //     machine.end = true;
-    //   },
-    // },
     error: {
       entry: async () => {
         log('Появилась ошибка', 'steelblue');
-        window.germesData.betProcessingAdditionalInfo = null;
-        const errorText = text(machine.data.result as HTMLElement);
+        window.germesData.betProcessingAdditionalInfo = undefined;
+        const errorText = text(<HTMLElement>machine.data.result);
         log(errorText, 'tomato');
         if (/Изменения в параметрах ставок/i.test(errorText)) {
-          checkCouponLoadingError({});
-          machine.end = true;
-          return;
-        }
-        worker.Helper.SendInformedMessage(errorText);
-        sendTGBotMessage(
-          '1786981726:AAE35XkwJRsuReonfh1X2b8E7k9X4vknC_s',
-          126302051,
-          errorText
-        );
-        const acceptChangesButton =
-          window.germesData.betFrame.contentDocument.querySelector<HTMLElement>(
-            '.favAmmButtons [value="Принять"]'
+          const acceptButton =
+            document.querySelector<HTMLElement>('.tg__accept');
+          if (acceptButton) {
+            log('Принимаем изменения', 'orange');
+            acceptButton.click();
+          }
+        } else if (/Изменения в параметрах ставок/i.test(errorText)) {
+          //
+        } else {
+          sendErrorMessage(errorText);
+          sendTGBotMessage(
+            '1786981726:AAE35XkwJRsuReonfh1X2b8E7k9X4vknC_s',
+            126302051,
+            errorText
           );
-        if (acceptChangesButton) {
-          log('Принимаем изменения', 'orange');
-          acceptChangesButton.click();
         }
-        checkCouponLoadingError({});
-        machine.end = true;
+        betProcessingError(machine);
       },
     },
     betPlaced: {
       entry: async () => {
-        window.germesData.betProcessingAdditionalInfo = null;
-        checkCouponLoadingSuccess('Ставка принята');
-        machine.end = true;
+        window.germesData.betProcessingAdditionalInfo = undefined;
+        betProcessingCompltete(machine);
       },
     },
     timeout: {
       entry: async () => {
-        window.germesData.betProcessingAdditionalInfo = null;
-        checkCouponLoadingError({
-          botMessage: 'Не дождались результата ставки',
-          informMessage: 'Не дождались результата ставки',
-        });
-        machine.end = true;
+        window.germesData.betProcessingAdditionalInfo = undefined;
+        const message = 'Не дождались результата ставки';
+        log(message, 'crimson');
+        sendErrorMessage(message);
+        betProcessingError(machine);
       },
     },
   });

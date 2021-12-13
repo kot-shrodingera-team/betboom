@@ -12,7 +12,7 @@ const coefficientOptions: StakeInfoValueOptions = {
     text: {
       // getText: () => '',
       selector: coefficientSelector,
-      context: () => window.germesData.betFrame.contentDocument,
+      context: () => window.germesData.sportFrame.contentDocument,
     },
     // replaceDataArray: [
     //   {

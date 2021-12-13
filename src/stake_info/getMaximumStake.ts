@@ -19,7 +19,7 @@ export const updateMaximumStake = async (): Promise<void> => {
   const maxStakeButton = await getElement<HTMLElement>(
     '.betAmountRow .tg__btn-coupon',
     5000,
-    window.germesData.betFrame.contentDocument
+    window.germesData.sportFrame.contentDocument
   );
   if (!maxStakeButton) {
     throw new JsFailError('Не найдена кнопка максимума');

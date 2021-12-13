@@ -18,7 +18,7 @@ const clearCoupon = clearCouponGenerator({
   // clearSingleSelector: '',
   clearAllSelector: '.ms_panel .btn_delete',
   // postCheck,
-  context: () => window.germesData.betFrame.contentDocument,
+  context: () => window.germesData.sportFrame.contentDocument,
 });
 
 export default clearCoupon;

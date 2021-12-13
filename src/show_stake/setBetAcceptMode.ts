@@ -2,7 +2,7 @@ import { getElement, log } from '@kot-shrodingera-team/germes-utils';
 import { JsFailError } from '@kot-shrodingera-team/germes-utils/errors';
 
 const setBetAcceptMode = async (): Promise<void> => {
-  const context = window.germesData.betFrame.contentDocument;
+  const context = window.germesData.sportFrame.contentDocument;
 
   const acceptChangesLabel = context.querySelector<HTMLLabelElement>(
     '.coupChbContainer > :not(.agreeToOddChange) > label.tg__chb_lbl'

@@ -12,7 +12,7 @@ import getCoefficient from '../stake_info/getCoefficient';
 const doStake = doStakeGenerator({
   // preCheck,
   doStakeButtonSelector:
-    '.favAmmButtons [value="ЗАКЛЮЧИТЬ ПАРИ"], .favAmmButtons [value="СДЕЛАТЬ СТАВКУ"], .favAmmButtons [value="СДЕЛАТЬ СТАВКУ"]',
+    '.favAmmButtons [value="ЗАКЛЮЧИТЬ ПАРИ"], .favAmmButtons [value="СДЕЛАТЬ СТАВКУ"], .favAmmButtons [value="Сделать ставку"]',
   // errorClasses: [
   //   {
   //     className: '',
@@ -22,7 +22,7 @@ const doStake = doStakeGenerator({
   disabledCheck: true,
   getCoefficient,
   // postCheck,
-  context: () => window.germesData.betFrame.contentDocument,
+  context: () => window.germesData.sportFrame.contentDocument,
 });
 
 export default doStake;

@@ -33,11 +33,12 @@ const openBet = async (): Promise<void> => {
   const bet = await getElement<HTMLElement>(
     betSelector,
     5000,
-    window.germesData.betFrame.contentDocument
+    window.germesData.sportFrame.contentDocument
   );
   if (!bet) {
     throw new JsFailError('Ставка не найдена');
   }
+  log('Ставка найдена', 'cadetblue', true);
 
   /* ======================================================================== */
   /*           Открытие ставки, проверка, что ставка попала в купон           */
@@ -57,9 +58,11 @@ const openBet = async (): Promise<void> => {
   // const betNameSelector = '';
 
   const eventNameElement =
-    window.germesData.betFrame.contentDocument.querySelector(eventNameSelector);
+    window.germesData.sportFrame.contentDocument.querySelector(
+      eventNameSelector
+    );
   const marketNameElement =
-    window.germesData.betFrame.contentDocument.querySelector(
+    window.germesData.sportFrame.contentDocument.querySelector(
       marketNameSelector
     );
   // const betNameElement = document.querySelector(betNameSelector);

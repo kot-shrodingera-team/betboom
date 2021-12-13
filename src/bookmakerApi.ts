@@ -2,7 +2,7 @@ import compareNameBKByLink from './helpers/compareBKByLink';
 
 declare global {
   interface GermesData {
-    betFrame: HTMLIFrameElement;
+    sportFrame: HTMLIFrameElement;
   }
   // interface Window {}
 }
@@ -31,9 +31,7 @@ export const clearGermesData = (): void => {
     manualParameter: undefined,
     manualStakeEnabled: undefined,
 
-    betFrame: document.querySelector<HTMLIFrameElement>(
-      '#sport_div_iframe > iframe'
-    ),
+    sportFrame: undefined,
   };
 };
 

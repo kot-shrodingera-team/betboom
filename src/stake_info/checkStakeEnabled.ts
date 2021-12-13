@@ -9,22 +9,21 @@ const checkStakeEnabled = checkStakeEnabledGenerator({
   // preCheck,
   getStakeCount,
   betCheck: {
-    selector: '#betAmountInput',
+    selector: '.stake_item_panel',
     errorClasses: [
       {
-        className: '.tg__stake_deleted.tg--red-clr',
+        className: 'inactive',
         message: 'Ставка не активна',
       },
     ],
   },
-  errorsCheck: [
-    {
-      selector:
-        '.err_panel_box:not([style="display: none;"])  > .tg_info_message',
-      // message: '',
-    },
-  ],
-  context: () => window.germesData.betFrame.contentDocument,
+  // errorsCheck: [
+  //   {
+  //     selector: '',
+  //     message: '',
+  //   },
+  // ],
+  context: () => window.germesData.sportFrame.contentDocument,
 });
 
 export default checkStakeEnabled;

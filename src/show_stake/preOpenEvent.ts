@@ -8,6 +8,8 @@ import {
   JsFailError,
 } from '@kot-shrodingera-team/germes-utils/errors';
 import getSiteCurrency from '../helpers/getSiteCurrency';
+import goToLive from '../helpers/goToLive';
+import setFramesReference from '../helpers/setFramesReferences';
 import checkAuth, { authStateReady } from '../stake_info/checkAuth';
 import { balanceReady, updateBalance } from '../stake_info/getBalance';
 import getStakeCount from '../stake_info/getStakeCount';
@@ -64,6 +66,9 @@ const preOpenEvent = async (): Promise<void> => {
   /*                                    ???                                   */
   /* ======================================================================== */
 
+  await goToLive();
+  await setFramesReference();
+
   const popupSelectors = {
     ident: '.js-registration_not_complete_popup[style]',
     bgPopup: '.fader[style]',
@@ -74,7 +79,7 @@ const preOpenEvent = async (): Promise<void> => {
   const popupBg = document.querySelector<HTMLElement>(popupSelectors.bgPopup);
 
   if (popupIdentif && popupBg) {
-    window.germesData.betFrame.contentDocument.location.reload();
+    window.germesData.sportFrame.contentDocument.location.reload();
     throw new JsFailError(
       'Ошибка проверки индентификации. Требуется перезагрузить страницу'
     );

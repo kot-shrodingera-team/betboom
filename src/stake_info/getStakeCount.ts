@@ -2,7 +2,7 @@ import getStakeCountGenerator from '@kot-shrodingera-team/germes-generators/stak
 
 const getStakeCount = getStakeCountGenerator({
   stakeSelector: '.stake_item_panel',
-  context: () => window.germesData.betFrame.contentDocument,
+  context: () => window.germesData.sportFrame.contentDocument,
 });
 
 export default getStakeCount;

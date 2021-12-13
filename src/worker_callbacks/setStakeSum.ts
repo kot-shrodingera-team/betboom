@@ -4,20 +4,20 @@ import setStakeSumGenerator, {
 import getCurrentSum, { sumInputSelector } from '../stake_info/getCurrentSum';
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-const preInputCheck = (sum: number): boolean => {
-  return true;
-};
+// const preInputCheck = (sum: number): boolean => {
+//   return true;
+// };
 
 const setStakeSumOptions = {
   sumInputSelector,
   alreadySetCheck: {
     getCurrentSum,
-    falseOnSumChange: true,
+    falseOnSumChange: false,
   },
-  preInputCheck,
-  inputType: 'fireEvent' as 'fireEvent' | 'react' | 'nativeInput',
-  fireEventNames: ['input'],
-  context: () => window.germesData.betFrame.contentDocument,
+  // preInputCheck,
+  // inputType: 'fireEvent' as 'fireEvent' | 'react' | 'nativeInput',
+  // fireEventNames: ['input'],
+  context: () => window.germesData.sportFrame.contentDocument,
 };
 
 const setStakeSum = setStakeSumGenerator(setStakeSumOptions);

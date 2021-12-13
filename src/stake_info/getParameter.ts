@@ -20,12 +20,12 @@ const getParameter = (): number => {
   const betNameSelector = '.stake_item_panel .st_name';
 
   const marketNameElement =
-    window.germesData.betFrame.contentDocument.querySelector<HTMLInputElement>(
+    window.germesData.sportFrame.contentDocument.querySelector<HTMLInputElement>(
       marketNameSelector
     );
 
   const betNameElement =
-    window.germesData.betFrame.contentDocument.querySelector<HTMLInputElement>(
+    window.germesData.sportFrame.contentDocument.querySelector<HTMLInputElement>(
       betNameSelector
     );
 
