@@ -1,5 +1,5 @@
 // import { log, sleep } from '@kot-shrodingera-team/germes-utils';
-import { sleep } from '@kot-shrodingera-team/germes-utils';
+import { log, sleep } from '@kot-shrodingera-team/germes-utils';
 import {
   JsFailError,
   // NewUrlError,
@@ -18,12 +18,22 @@ const openEvent = async (): Promise<void> => {
   const betFrameWindow = <any>window.germesData.sportFrame.contentWindow;
 
   // при переходе на лайв, если сразу же пытаться открыть страницу события по API, выдаёт ошибку
-  // задержки в 100 мс вроде как достаточно
+  // Нужна задержка, но она зависит от разных факторов
   // TDOD: по хорошему надо добавить её только при пеереходе на лайв
 
-  await sleep(100);
-
-  betFrameWindow.$S.openEvent(worker.EventId, gameName, true);
+  for (let i = 1; i <= 3; i += 1) {
+    try {
+      betFrameWindow.$S.openEvent(worker.EventId, gameName, true);
+      break;
+    } catch {
+      if (i === 3) {
+        throw new JsFailError('Так и не удалось перейти на событие');
+      }
+      log('Ошибка перехода на событие. Пробуем ещё раз', 'crimson');
+      // eslint-disable-next-line no-await-in-loop
+      await sleep(100);
+    }
+  }
 
   // const uri = worker.EventUrl;
   // const event = uri.slice(91, uri.length);
