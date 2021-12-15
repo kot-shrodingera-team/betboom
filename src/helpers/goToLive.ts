@@ -6,7 +6,8 @@ import {
 
 const goToLive = async (): Promise<void> => {
   const liveLink = await getElement<HTMLElement>(
-    '.nav__link[href="/live"]',
+    // betboom, pinup
+    '.js-gtm-click-menu-item--live > a, .nav__link[href="/live"]',
     5000
   );
   if (!liveLink) {
