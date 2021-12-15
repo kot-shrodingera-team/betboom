@@ -28,20 +28,6 @@ const preOpenEvent = async (): Promise<void> => {
   }
 
   /* ======================================================================== */
-  /*                             Проверка раздела                             */
-  /* ======================================================================== */
-
-  if (window.location.hostname === 'pin-up.ru') {
-    if (!/^\/live/.test(window.location.pathname)) {
-      window.location.pathname = '/live';
-      throw new NewUrlError('Переходим в раздел Live');
-    }
-  } else if (!/^\/sport\/live/.test(window.location.pathname)) {
-    window.location.pathname = '/sport/live';
-    throw new NewUrlError('Переходим в раздел Live');
-  }
-
-  /* ======================================================================== */
   /*                 Проверка авторизации и обновление баланса                */
   /* ======================================================================== */
 
