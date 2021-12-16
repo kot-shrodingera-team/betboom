@@ -3,7 +3,10 @@ import { log } from '@kot-shrodingera-team/germes-utils';
 import getCoefficient from '../stake_info/getCoefficient';
 
 const preCheck = (): boolean => {
-  const acceptButton = document.querySelector<HTMLElement>('.tg__accept');
+  const acceptButton =
+    window.germesData.sportFrame.contentDocument.querySelector<HTMLElement>(
+      '.tg__accept'
+    );
   if (acceptButton) {
     log('Принимаем изменения. Ставку не делаем', 'orange');
     acceptButton.click();
