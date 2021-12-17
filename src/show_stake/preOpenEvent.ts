@@ -2,6 +2,7 @@ import {
   checkBookerHost,
   checkCurrency,
   log,
+  text,
 } from '@kot-shrodingera-team/germes-utils';
 import {
   NewUrlError,
@@ -85,6 +86,23 @@ const preOpenEvent = async (): Promise<void> => {
   if (quizCloseButton) {
     log('Закрываем квиз', 'orange');
     quizCloseButton.click();
+  }
+
+  const popupContent =
+    window.germesData.sportFrame.contentDocument.querySelector(
+      '.popup-wrapper-content .tg__modal_heading'
+    );
+  if (popupContent) {
+    const popupContentText = text(popupContent);
+    if (
+      /Вы вышли из системы! Пожалуйста, перезагрузите страницу/.test(
+        popupContentText
+      )
+    ) {
+      log(popupContentText, 'tomato');
+      worker.Islogin = false;
+      throw new JsFailError('Пропала авторизация');
+    }
   }
 
   /* ======================================================================== */
