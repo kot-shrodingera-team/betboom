@@ -90,7 +90,7 @@ const preOpenEvent = async (): Promise<void> => {
 
   const popupContent =
     window.germesData.sportFrame.contentDocument.querySelector(
-      '.popup-wrapper-content .tg__modal_heading'
+      '#popup-wrapper-content .tg__modal_heading'
     );
   if (popupContent) {
     const popupContentText = text(popupContent);
